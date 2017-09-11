@@ -1,0 +1,11 @@
+[Unit]
+Description=Homeassistant container
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/docker start -a homeassistant_server
+ExecStop=/usr/bin/docker stop -t 2 homeassistant_server
+
+[Install]
+WantedBy=local.target

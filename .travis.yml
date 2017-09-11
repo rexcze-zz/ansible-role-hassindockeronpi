@@ -1,0 +1,36 @@
+---
+branches:
+  only:
+  - master
+
+services: docker
+
+language: python
+python: "2.7"
+
+env:
+  - distro: centos7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+
+before_install:
+  # Pull container.
+  #- 'docker pull grycap/travis:${distro}' 
+  - 'docker pull rexcze/docker-ansible-centos'
+
+script:
+  - container_id=$(mktemp)
+  # Run container in detached state.
+  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} rexcze/docker-ansible-centos "${init}" > "${container_id}"'
+
+  # Ansible syntax check.
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
+
+  # Unmount /etc/resolv.conf to be able to unlink/remove by ansible role
+  - 'docker exec "$(cat ${container_id})" env TERM=xterm umount -f /etc/resolv.conf'
+
+  # Test role installation.
+  - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -e "GALAXY_LAUNCH_DAEMON=false"'
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

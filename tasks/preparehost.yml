@@ -1,0 +1,4 @@
+# vim:ft=ansible:
+---
+- name: Install packages
+  apt: pkg={{ docker_host_packages }} state=latest update_cache=true
