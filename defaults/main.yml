@@ -1,3 +1,22 @@
 ---
 # defaults file for ansible-role-homeassistantindocker
-docker_host_packages: [ 'apt-transport-https', 'ca-certificates', 'curl', 'docker.io', 'gnupg2' ]
+docker_host_packages: [ 'apt-transport-https', 'ca-certificates', 'certbot', 'curl', 'docker.io', 'gnupg2' ]
+docker_host_workdir: /opt/hass
+docker_host_docker_enabled: yes
+docker_host_manage_docker_service: True
+docker_host_docker_state: started
+hass_deploy_config: True
+hass_container_name: homeassistant_server
+hass_image_name: homeassistant/armhf-homeassistant:latest
+hass_container_state: started
+hass_container_restart_policy: always
+hass_image_pull: True
+hass_container_listen_port: 443
+hass_cfg_name: Home
+hass_cfg_latitude: 45.000000
+hass_cfg_longitude: 18.000000
+hass_cfg_elevation: 300
+hass_cfg_unit_system: metric
+hass_cfg_time_zone: Europe/Prague
+hass_cfg_api_password: PASSWORD
+hass_cfg_base_url: example.duckdns.org:8123

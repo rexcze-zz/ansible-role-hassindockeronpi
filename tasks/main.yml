@@ -66,3 +66,4 @@ tasks:
       name: homeassistant-container
       enabled: yes
       daemon_reload: yes
+# /usr/bin/python3 -m homeassistant --script check_config --config /config
