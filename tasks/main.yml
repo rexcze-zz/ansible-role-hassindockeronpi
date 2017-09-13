@@ -1,69 +1,70 @@
 # vim:ft=ansible:
 ---
-tasks:
-  - name: Create working directory
-    file:
-      path: {{ docker_host_workdir }}
-      owner: root
-      group: root
-      mode: 0755
-      state: directory
-    when:
-      - hass_deploy_config == True
+- include: preparehost.yml
 
-  - name: Create config directory
-    file:
-      path: "{{ docker_host_workdir }}/config"
-      owner: root
-      group: root
-      mode: 0755
-      state: directory
-    when:
-      - hass_deploy_config == True
+- name: Create working directory
+  file:
+    path: "{{ docker_host_workdir }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+  when:
+    - hass_deploy_config == True
 
-  - name: Start and enable docker service
-    systemd:
-      name: docker
-      state: {{ docker_host_docker_state }}
-      enabled: {{ docker_host_docker_enabled }}
-    when:
-      - docker_host_manage_docker_service == True
+- name: Create config directory
+  file:
+    path: "{{ docker_host_workdir }}/config"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+  when:
+    - hass_deploy_config == True
 
-  - name: Deploy home assistant cofig
-    template:
-      src: hass-configuration.yaml.j2
-      dest: "{{ docker_host_workdir }}/config/configuration.yaml"
-      owner: root
-      group: root
-      mode: 0644
-    when:
-      - hass_deploy_config == True
+- name: Start and enable docker service
+  systemd:
+    name: docker
+    state: "{{ docker_host_docker_state }}"
+    enabled: "{{ docker_host_docker_enabled }}"
+  when:
+    - docker_host_manage_docker_service == True
 
-  - name: Deploy docker container
-    docker_container:
-      name: {{ hass_container_name }}
-      image: {{ hass_image_name }}
-      state: {{ hass_container_state }}
-      #restart: yes
-      restart_policy: {{ hass_container_restart_policy }}
-      pull: {{ hass_image_pull }}
-      ports:
-        - "{{ hass_container_listen_port }}:8123"
-      volumes:
-        - "{{ docker_host_workdir }}/config/:/config"
+- name: Deploy home assistant cofig
+  template:
+    src: hass-configuration.yaml.j2
+    dest: "{{ docker_host_workdir }}/config/configuration.yaml"
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - hass_deploy_config == True
 
-  # Maybe this is not needed because of docker_container module restart_policy
-  - name: Copy systemd service file for homeassistant
-    copy:
-      src: homeassistant-container.service
-      dest: /etc/systemd/system/homeassistant-container.service
-      owner: root
-      group: root
-      mode: 0644
+- name: Deploy docker container
+  docker_container:
+    name: "{{ hass_container_name }}"
+    image: "{{ hass_image_name }}"
+    state: "{{ hass_container_state }}"
+    # restart: yes
+    restart_policy: "{{ hass_container_restart_policy }}"
+    pull: "{{ hass_image_pull }}"
+    ports:
+      - "{{ hass_container_listen_port }}:8123"
+    volumes:
+      - "{{ docker_host_workdir }}/config/:/config"
 
-  - name: Enable homeassistant docker container after start by systemd
-    systemd:
-      name: homeassistant-container
-      enabled: yes
-      daemon_reload: yes
+# Maybe this is not needed because of docker_container module restart_policy
+- name: Copy systemd service file for homeassistant
+  copy:
+    src: homeassistant-container.service
+    dest: /etc/systemd/system/homeassistant-container.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable homeassistant docker container after start by systemd
+  systemd:
+    name: homeassistant-container
+    enabled: yes
+    daemon_reload: yes
 # /usr/bin/python3 -m homeassistant --script check_config --config /config
