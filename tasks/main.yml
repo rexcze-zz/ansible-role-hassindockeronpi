@@ -13,7 +13,7 @@ tasks:
 
   - name: Create config directory
     file:
-      path: {{ docker_host_workdir }}/config
+      path: "{{ docker_host_workdir }}/config"
       owner: root
       group: root
       mode: 0755
@@ -32,7 +32,7 @@ tasks:
   - name: Deploy home assistant cofig
     template:
       src: hass-configuration.yaml.j2
-      dest: {{ docker_host_workdir }}/config/configuration.yaml
+      dest: "{{ docker_host_workdir }}/config/configuration.yaml"
       owner: root
       group: root
       mode: 0644
@@ -42,7 +42,7 @@ tasks:
   - name: Deploy docker container
     docker_container:
       name: {{ hass_container_name }}
-      image: {{ hass_image_name }}homeassistant/armhf-homeassistant:latest
+      image: {{ hass_image_name }}
       state: {{ hass_container_state }}
       #restart: yes
       restart_policy: {{ hass_container_restart_policy }}
