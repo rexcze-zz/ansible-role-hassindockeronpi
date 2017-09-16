@@ -4,7 +4,7 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStart=/usr/bin/docker start -a homeassistant_server
+ExecStart=/usr/bin/docker start homeassistant_server
 ExecStop=/usr/bin/docker stop -t 2 homeassistant_server
 
 [Install]
