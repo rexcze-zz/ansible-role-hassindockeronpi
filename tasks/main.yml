@@ -2,34 +2,6 @@
 ---
 - include: preparehost.yml
 
-- name: Create working directory
-  file:
-    path: "{{ docker_host_workdir }}"
-    owner: root
-    group: root
-    mode: 0755
-    state: directory
-  when:
-    - hass_deploy_config == True
-
-- name: Create config directory
-  file:
-    path: "{{ docker_host_workdir }}/config"
-    owner: root
-    group: root
-    mode: 0755
-    state: directory
-  when:
-    - hass_deploy_config == True
-
-- name: Start and enable docker service
-  systemd:
-    name: docker
-    state: "{{ docker_host_docker_state }}"
-    enabled: "{{ docker_host_docker_enabled }}"
-  when:
-    - docker_host_manage_docker_service == True
-
 - name: Deploy home assistant cofig
   template:
     src: hass-configuration.yaml.j2
@@ -53,18 +25,15 @@
     volumes:
       - "{{ docker_host_workdir }}/config/:/config"
 
-# Maybe this is not needed because of docker_container module restart_policy
-- name: Copy systemd service file for homeassistant
-  copy:
-    src: homeassistant-container.service
-    dest: /etc/systemd/system/homeassistant-container.service
+- name: Hass device tracker platform
+  template:
+    src: device_tracker.yaml.j2
+    dest: "{{ docker_host_workdir }}/config/components.d/device_tracker.yaml.j2"
     owner: root
     group: root
     mode: 0644
+  when:
+    - hass_cfg_device_tracker_platform != ""
 
-- name: Enable homeassistant docker container after start by systemd
-  systemd:
-    name: homeassistant-container
-    enabled: yes
-    daemon_reload: yes
+
 # /usr/bin/python3 -m homeassistant --script check_config --config /config

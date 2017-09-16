@@ -2,3 +2,60 @@
 ---
 - name: Install packages
   apt: pkg={{ docker_host_packages }} state=latest update_cache=true
+
+- name: Create working directory
+  file:
+    path: "{{ docker_host_workdir }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+  when:
+    - hass_deploy_config == True
+
+- name: Create config directory
+  file:
+    path: "{{ docker_host_workdir }}/config"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+  when:
+    - hass_deploy_config == True
+
+- name: Create components.d directory
+  file:
+    path: "{{ docker_host_workdir }}/config/components.d"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+  when:
+    - hass_deploy_config == True
+
+- name: Start and enable docker service
+  systemd:
+    name: docker
+    state: "{{ docker_host_docker_state }}"
+    enabled: "{{ docker_host_docker_enabled }}"
+  when:
+    - docker_host_manage_docker_service == True
+
+# Maybe this is not needed because of docker_container module restart_policy
+- name: Copy systemd service file for homeassistant
+  copy:
+    src: homeassistant-container.service
+    dest: /etc/systemd/system/homeassistant-container.service
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - docker_host_manage_docker_service == True
+
+- name: Enable homeassistant docker container after start by systemd
+  systemd:
+    name: homeassistant-container
+    enabled: yes
+    daemon_reload: yes
+  when:
+    - docker_host_manage_docker_service == True

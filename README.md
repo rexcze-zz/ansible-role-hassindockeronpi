@@ -27,7 +27,7 @@ Role Variables
 | `hass_container_restart_policy`    | `always`               | Home assistant Docker container restart policy (see Ansible or Docker docs)          |
 | `hass_image_pull`                  | `True`                 | Pull or not newest docker image from registry                                        |
 | `hass_container_listen_port`       | `443`                  | Incoming port to our Home assistant container's default port 8123                    |
-| `hass_cfg_*`                        | `config defaults`     | All Home assistant configuration options are in form hass_cfg_variable_name          |
+| `hass_cfg_*`                       | `config defaults`     | All Home assistant configuration options are in form hass_cfg_variable_name          |
 
 Dependencies
 ------------
