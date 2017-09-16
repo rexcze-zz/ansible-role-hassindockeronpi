@@ -20,3 +20,4 @@ hass_cfg_unit_system: metric
 hass_cfg_time_zone: Europe/Prague
 hass_cfg_api_password: PASSWORD
 hass_cfg_base_url: example.duckdns.org:8123
+hass_cfg_device_tracker_platform: upc_connect
