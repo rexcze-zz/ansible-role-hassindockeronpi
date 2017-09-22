@@ -21,4 +21,6 @@ hass_cfg_time_zone: Europe/Prague
 hass_cfg_api_password: PASSWORD
 hass_cfg_base_url: example.duckdns.org
 hass_cfg_base_url_port: 8123
+hass_cfg_ssl_certificate: /etc/letsencrypt/live/example.duckdns.org/fullchain.pem
+hass_cfg_ssl_key: /etc/letsencrypt/live/example.duckdns.org/privkey.pem
 hass_cfg_device_tracker_platform: upc_connect

@@ -25,6 +25,7 @@
     volumes:
       - "{{ docker_host_workdir }}/config/:/config"
       - "/etc/letsencrypt/live/{{ hass_cfg_base_url }}/:/etc/letsencrypt/live/{{ hass_cfg_base_url }}"
+      - "/etc/letsencrypt/archive/{{ hass_cfg_base_url }}/:/etc/letsencrypt/archive/{{ hass_cfg_base_url }}"
 
 - name: Hass device tracker platform
   template:

@@ -26,6 +26,8 @@ http:
   api_password: {{ hass_cfg_api_password }}
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
   base_url: {{ hass_cfg_base_url }}:{{ hass_cfg_base_url_port }}
+  ssl_certificate: {{ hass_cfg_ssl_certificate }}
+  ssl_key: {{ hass_cfg_ssl_key }}
 
 # Checks for available updates
 # Note: This component will send some information about your system to
@@ -73,7 +75,7 @@ tts:
   - platform: google
 
 
-components: !include_dir_list components.d/
+# components: !include_dir_list components.d/
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
