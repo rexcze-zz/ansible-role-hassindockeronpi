@@ -21,14 +21,15 @@
     restart_policy: "{{ hass_container_restart_policy }}"
     pull: "{{ hass_image_pull }}"
     ports:
-      - "{{ hass_container_listen_port }}:8123"
+      - "{{ hass_container_listen_port }}:{{ hass_cfg_base_url_port }}"
     volumes:
       - "{{ docker_host_workdir }}/config/:/config"
+      - "/etc/letsencrypt/live/{{ hass_cfg_base_url }}/:/etc/letsencrypt/live/{{ hass_cfg_base_url }}"
 
 - name: Hass device tracker platform
   template:
     src: device_tracker.yaml.j2
-    dest: "{{ docker_host_workdir }}/config/components.d/device_tracker.yaml.j2"
+    dest: "{{ docker_host_workdir }}/config/components.d/device_tracker.yaml"
     owner: root
     group: root
     mode: 0644
