@@ -1,14 +1,14 @@
-Router
+Home assistant in Docker on Raspberry Pi
 =========
 
 [![Build Status](https://travis-ci.org/rexcze/ansible-role-hassindockeronpi.svg?branch=master)](https://travis-ci.org/rexcze/ansible-role-hassindockeronpi)
 
-This role sets up homeassistant in docker on Raspberry Pi. Tested on Rasperry PI zero wifi.
+This role sets up homeassistant in docker on Raspberry Pi. Tested on Rasperry Pi zero wifi bought in Boston the Day after RHT Summit 2017. It was quite rainy...
 
 Requirements
 ------------
 
-This role requires internet connection, Debian based host system with systemd. So far.
+This role requires internet connection, Debian (no Fedora for Raspberry Pi armv6) based host system with systemd. At least so far.
 
 Role Variables
 --------------
@@ -38,7 +38,7 @@ None. Hopefully.
 Example Playbook
 ----------------
 
-    - hosts: raspberries
+    - hosts: my-belowed-and-hated-raspberry-pi-zerro-with-wifi
       roles:
          - { role: rexcze.hassindockeronpi }
 
